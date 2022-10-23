@@ -7,13 +7,14 @@ from html.parser import HTMLParser
 from werkzeug.serving import WSGIRequestHandler
 WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
-import os
 import tensorflow as tf
 from tensorflow import keras
 import re
 import numpy as np
 from pykospacing import Spacing
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 
 app = Flask(__name__)

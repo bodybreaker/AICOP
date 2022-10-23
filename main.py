@@ -4,6 +4,8 @@ import requests
 import json
 from io import StringIO
 from html.parser import HTMLParser
+from werkzeug.serving import WSGIRequestHandler
+WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 app = Flask(__name__)

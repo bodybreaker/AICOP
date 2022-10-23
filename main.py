@@ -24,8 +24,8 @@ def receive_sms():
 
     app.logger.info("got sms")
 
-    print("[수신번호] >> "+number)
-    print("[문자내용] >> "+content)
+    app.logger.info("[수신번호] >> "+number)
+    app.logger.info("[문자내용] >> "+content)
 
     copResult = check_cop(number=number)
 
@@ -35,20 +35,20 @@ def receive_sms():
 
 # 경찰청 사이버수사대 체크
 def check_cop(number):
-    print("경찰청 사이버수사대 체크 >> "+number)
+    app.logger.info("경찰청 사이버수사대 체크 >> "+number)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
         'Host':'net-durumi.cyber.go.kr',
         'Referer':'https://cyberbureau.police.go.kr/'
     }
     response = requests.get(URL_COP+number,headers=headers)
-    print("응답코드 >> "+str(response.status_code))
+    app.logger.info("응답코드 >> "+str(response.status_code))
 
     resText = response.text
     resText = resText.replace("data(","")
     resText = resText.replace(")","")
     resText = json.loads(resText)
-    print("응답전문 >> "+str(resText))
+    app.logger.info("응답전문 >> "+str(resText))
 
     s = MLStripper()
     s.feed(resText['message'])

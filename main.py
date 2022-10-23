@@ -22,6 +22,8 @@ def receive_sms():
     number = request.form["number"]
     content = request.form["content"]
 
+    print("got sms")
+
     print("[수신번호] >> "+number)
     print("[문자내용] >> "+content)
 

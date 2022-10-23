@@ -28,33 +28,6 @@ model = tf.keras.models.load_model('sms_model.h5')
 tokenizer = Tokenizer()
 # app.logger.info("모델 로드 완료")
 
-def sentiment_predict(new_sentence):
-    # URL 제거
-    new_sentence = re.sub(r"(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])","",new_sentence)
-    new_sentence = re.sub(r'/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi','',new_sentence)
-    
-    # web발신 제거
-    new_sentence = new_sentence.replace('[Web발신]','')
-
-    # 개행문자 제거
-    new_sentence = new_sentence.replace('\n','')
-    
-    # 한글만 처리
-    new_sentence  = re.sub(r"[^ㄱ-ㅣ가-힣\s]", "", new_sentence)
-
-    spacing = Spacing()
-    new_sentence = spacing(new_sentence)
-
-    app.logger.info("전처리 완료된 문자 >>"+new_sentence)
-    
-    
-    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
-    pad_new = pad_sequences(encoded, maxlen = 273) # 패딩
-    score = float(model.predict(pad_new))*100 # 예측
-
-    app.logger.info(score)
-    return score
-
 
 #경찰청 사기의심 전화*계좌번호 조회
 URL_COP="https://net-durumi.cyber.go.kr/countFraud.do?fieldType=H&accessType=3&_=1662989169142&keyword="
@@ -74,8 +47,33 @@ def receive_sms():
     app.logger.info("[수신번호] >> "+number)
     app.logger.info("[문자내용] >> "+content)
 
+    new_sentence = content
 
-    app.logger.info("모델 예측 결과 >>"+str((content)))
+     # URL 제거
+    new_sentence = re.sub(r"(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])","",new_sentence)
+    new_sentence = re.sub(r'/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi','',new_sentence)
+    
+    # web발신 제거
+    new_sentence = new_sentence.replace('[Web발신]','')
+
+    # 개행문자 제거
+    new_sentence = new_sentence.replace('\n','')
+    
+    # 한글만 처리
+    new_sentence  = re.sub(r"[^ㄱ-ㅣ가-힣\s]", "", new_sentence)
+
+    spacing = Spacing()
+    new_sentence = spacing(new_sentence)
+
+    app.logger.info("전처리 완료된 문자 >>"+new_sentence)
+
+    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
+    pad_new = pad_sequences(encoded, maxlen = 273) # 패딩
+    score = float(model.predict(pad_new))*100 # 예측
+
+    app.logger.info(score)
+
+    app.logger.info("모델 예측 결과 >>"+str(score))
 
     copResult = check_cop(number=number)
 

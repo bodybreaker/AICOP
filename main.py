@@ -78,7 +78,7 @@ def receive_sms():
 
     copResult = check_cop(number=number)
 
-    result={"isSuccess":True,"copResult":copResult}
+    result={"isSuccess":True,"copResult":copResult,"aiResult":round(score,2)}
 
     return jsonify(result)
 

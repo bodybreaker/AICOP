@@ -18,10 +18,31 @@ app = Flask(__name__)
 
 
 # ai모델 읽기
-new_model = tf.keras.models.load_model('sms_model.h5')
-# 모델 구조를 출력합니다
+model = tf.keras.models.load_model('sms_model.h5')
 # app.logger.info("모델 로드 완료")
 
+def sentiment_predict(new_sentence):
+    # URL 제거
+    new_sentence = re.sub(r"(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])","",new_sentence)
+    new_sentence = re.sub(r'/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi','',new_sentence)
+    
+    # web발신 제거
+    new_sentence = new_sentence.replace('[Web발신]','')
+
+    # 개행문자 제거
+    new_sentence = new_sentence.replace('\n','')
+    
+    # 한글만 처리
+    new_sentence  = re.sub(r"[^ㄱ-ㅣ가-힣\s]", "", new_sentence)
+
+    spacing = Spacing()
+    new_sentence = spacing(new_sentence)
+    
+    
+    encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
+    pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
+    score = float(model.predict(pad_new))*100 # 예측
+    print(score)
 
 
 #경찰청 사기의심 전화*계좌번호 조회
@@ -33,6 +54,7 @@ def health_check():
 
 @app.post("/sms")
 def receive_sms():
+    
     number = request.form["number"]
     content = request.form["content"]
 
@@ -40,6 +62,9 @@ def receive_sms():
 
     app.logger.info("[수신번호] >> "+number)
     app.logger.info("[문자내용] >> "+content)
+
+
+    app.logger.info("모델 예측 결과 >>"+str(sentiment_predict(content)))
 
     copResult = check_cop(number=number)
 

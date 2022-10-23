@@ -7,8 +7,21 @@ from html.parser import HTMLParser
 from werkzeug.serving import WSGIRequestHandler
 WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
+import os
+import tensorflow as tf
+from tensorflow import keras
+
 
 app = Flask(__name__)
+
+
+
+# ai모델 읽기
+new_model = tf.keras.models.load_model('sms_model.h5')
+# 모델 구조를 출력합니다
+app.logger.info("모델 로드 완료")
+
+
 
 #경찰청 사기의심 전화*계좌번호 조회
 URL_COP="https://net-durumi.cyber.go.kr/countFraud.do?fieldType=H&accessType=3&_=1662989169142&keyword="

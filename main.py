@@ -25,6 +25,7 @@ app = Flask(__name__)
 
 # ai모델 읽기
 model = tf.keras.models.load_model('sms_model.h5')
+tokenizer = Tokenizer()
 # app.logger.info("모델 로드 완료")
 
 def sentiment_predict(new_sentence):

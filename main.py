@@ -14,18 +14,17 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import re
 import numpy as np
 from pykospacing import Spacing
+import pickle5 as pickle
 
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-
 app = Flask(__name__)
-
-
 
 # ai모델 읽기
 model = tf.keras.models.load_model('sms_model.h5')
-tokenizer = Tokenizer()
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
 # app.logger.info("모델 로드 완료")
 
 
@@ -46,6 +45,8 @@ def receive_sms():
 
     app.logger.info("[수신번호] >> "+number)
     app.logger.info("[문자내용] >> "+content)
+
+    print(model)
 
     new_sentence = content
 
@@ -73,7 +74,7 @@ def receive_sms():
 
     app.logger.info(score)
 
-    app.logger.info("모델 예측 결과 >>"+str(score))
+    app.logger.info("모델 예측 결과 >>"+str((content)))
 
     copResult = check_cop(number=number)
 

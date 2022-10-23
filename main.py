@@ -89,7 +89,7 @@ def receive_sms():
 def check_cop(number):
     app.logger.info("경찰청 사이버수사대 체크 >> "+number)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 15.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
         'Host':'net-durumi.cyber.go.kr',
         'Referer':'https://cyberbureau.police.go.kr/'
     }

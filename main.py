@@ -44,6 +44,8 @@ def sentiment_predict(new_sentence):
 
     spacing = Spacing()
     new_sentence = spacing(new_sentence)
+
+    app.logger.info("전처리 완료된 문자 >>"+new_sentence)
     
     
     encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
@@ -51,7 +53,7 @@ def sentiment_predict(new_sentence):
     score = float(model.predict(pad_new))*100 # 예측
 
     app.logger.info(score)
-    print(score)
+    return score
 
 
 #경찰청 사기의심 전화*계좌번호 조회
@@ -73,7 +75,7 @@ def receive_sms():
     app.logger.info("[문자내용] >> "+content)
 
 
-    app.logger.info("모델 예측 결과 >>"+str(sentiment_predict(content)))
+    app.logger.info("모델 예측 결과 >>"+str((content)))
 
     copResult = check_cop(number=number)
 

@@ -9,6 +9,8 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import re
 import numpy as np
 from pykospacing import Spacing

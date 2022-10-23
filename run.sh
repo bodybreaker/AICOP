@@ -7,4 +7,3 @@ cat /dev/null > nohup.out
 kill -9 `netstat -tnlp|grep 6789|gawk '{ print $7 }'|grep -o '[0-9]*'`
 
 nohup python main.py &
-tail -f nohup.out

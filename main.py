@@ -20,7 +20,7 @@ app = Flask(__name__)
 # ai모델 읽기
 new_model = tf.keras.models.load_model('sms_model.h5')
 # 모델 구조를 출력합니다
-app.logger.info("모델 로드 완료")
+# app.logger.info("모델 로드 완료")
 
 
 

@@ -2,9 +2,8 @@
 source /home/itrnd/anaconda3/etc/profile.d/conda.sh
 conda activate aicop
 
-kill $(pgrep -f 'python main.py')
+kill -9 $(ps aux |awk '/main.py/ {print $2}')
 
-cat /dev/null > nohup.out
 nohup python main.py &
 
 tail -f nohup.out

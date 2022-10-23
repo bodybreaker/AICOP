@@ -47,7 +47,7 @@ def sentiment_predict(new_sentence):
     
     
     encoded = tokenizer.texts_to_sequences([new_sentence]) # 정수 인코딩
-    pad_new = pad_sequences(encoded, maxlen = max_len) # 패딩
+    pad_new = pad_sequences(encoded, maxlen = 273) # 패딩
     score = float(model.predict(pad_new))*100 # 예측
     print(score)
 

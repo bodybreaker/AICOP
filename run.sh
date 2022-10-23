@@ -5,6 +5,6 @@ conda activate aicop
 kill $(ps aux |awk '/main.py/ {print $2}')
 
 cat /dev/null > nohup.out
-nohup stdbuf -oL python main.py > nohup.out &
+nohup python main.py > log.output 2>&1 &
 
 tail -f nohup.out
